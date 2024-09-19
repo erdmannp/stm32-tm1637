@@ -1,12 +1,24 @@
-objects = main.o
-all: $(objects)
-	$(CC) $^ -o all
+TARGET = main
+LIBS = 
+CC = gcc
+CFLAGS = -g -Wall
 
-# Syntax - targets ...: target-pattern: prereq-patterns ...
-# In the case of the first target, foo.o, the target-pattern matches foo.o and sets the "stem" to be "foo".
-# It then replaces the '%' in prereq-patterns with that stem
-$(objects): %.o: %.c
-	$(CC) -c $^ -o $@
+.PHONY: default all clean
+
+default: $(TARGET)
+all: default
+
+OBJECTS = $(patsubst %.c, %.o, $(wildcard *.c))
+HEADERS = $(wildcard *.h)
+
+%.o: %.c $(HEADERS)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+.PRECIOUS: $(TARGET) $(OBJECTS)
+
+$(TARGET): $(OBJECTS)
+	$(CC) $(OBJECTS) -Wall $(LIBS) -o $@
 
 clean:
-	rm -f *.c *.o all
+	-rm -f *.o
+	-rm -f $(TARGET)
