@@ -4,6 +4,9 @@ int main() {
   tm1637Init();
   tm1637DisplayDecimal(4, 1);
   tm1637SetBrightness(5);
+  tm1637DisplayTwoNumbers(-4, 6);
+  tm1637DisplayTwoNumbers(4, -6);
+
   return 0;
 }
 

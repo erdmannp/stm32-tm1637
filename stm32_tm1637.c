@@ -11,7 +11,7 @@ void _tm1637ClkHigh(void);
 void _tm1637ClkLow(void);
 void _tm1637DioHigh(void);
 void _tm1637DioLow(void);
-
+void _tm1637DisplaySequence(unsigned char digitArr[]);
 
 const char segmentMap[] = {
     0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, // 0-7
@@ -19,6 +19,8 @@ const char segmentMap[] = {
     0x00
 };
 
+const char minus = 0x40;
+const char none = 0x00;
 
 void tm1637Init(void)
 {
@@ -36,6 +38,35 @@ void tm1637Init(void)
     tm1637SetBrightness(8);
 }
 
+void tm1637DisplayTwoNumbers(int left, int right)
+{
+    unsigned char digitArr[4];
+ 
+    if (left < 0)
+    {   
+        digitArr[0] = minus;
+        left *= -1;
+    } else 
+    {
+        digitArr[0] = none;
+    }
+
+    
+    if (right < 0)
+    {   
+        digitArr[2] = minus;
+        right *= -1;
+    } else 
+    {
+        digitArr[2] = none;
+    }
+
+    digitArr[1] = segmentMap[left % 10];
+    digitArr[3] = segmentMap[right % 10];
+    
+    _tm1637DisplaySequence(digitArr);
+}
+
 void tm1637DisplayDecimal(int v, int displaySeparator)
 {
     unsigned char digitArr[4];
@@ -46,22 +77,8 @@ void tm1637DisplayDecimal(int v, int displaySeparator)
         }
         v /= 10;
     }
-
-    _tm1637Start();
-    _tm1637WriteByte(0x40);
-    _tm1637ReadResult();
-    _tm1637Stop();
-
-    _tm1637Start();
-    _tm1637WriteByte(0xc0);
-    _tm1637ReadResult();
-
-    for (int i = 0; i < 4; ++i) {
-        _tm1637WriteByte(digitArr[3 - i]);
-        _tm1637ReadResult();
-    }
-
-    _tm1637Stop();
+    
+    _tm1637DisplaySequence(digitArr);
 }
 
 // Valid brightness values: 0 - 8.
@@ -76,6 +93,25 @@ void tm1637SetBrightness(char brightness)
     _tm1637Start();
     _tm1637WriteByte(0x87 + brightness);
     _tm1637ReadResult();
+    _tm1637Stop();
+}
+
+void _tm1637DisplaySequence(unsigned char digitArr[]) 
+{
+    _tm1637Start();
+    _tm1637WriteByte(0x40);
+    _tm1637ReadResult();
+    _tm1637Stop();
+
+    _tm1637Start();
+    _tm1637WriteByte(0xc0);
+    _tm1637ReadResult();
+
+    for (int i = 0; i < 4; ++i) {
+        _tm1637WriteByte(digitArr[3 - i]);
+        _tm1637ReadResult();
+    }
+
     _tm1637Stop();
 }
 
