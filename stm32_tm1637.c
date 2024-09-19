@@ -12,6 +12,7 @@ void _tm1637ClkLow(void);
 void _tm1637DioHigh(void);
 void _tm1637DioLow(void);
 void _tm1637DisplaySequence(unsigned char digitArr[]);
+void _tm1637PrepareNumber(int n, unsigned char arr[]);
 
 const char segmentMap[] = {
     0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, // 0-7
@@ -38,33 +39,71 @@ void tm1637Init(void)
     tm1637SetBrightness(8);
 }
 
+#ifdef POORTEST
+void printAsNumber(unsigned char *arr)
+{
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 10; j++) 
+        {
+            if (arr[i] == segmentMap[j])
+            { 
+                printf("%d", j);
+                break;
+            } 
+            if (arr[i] == none) 
+            {
+                printf("_");
+                break;
+            }
+            if(arr[i] == minus) 
+            {
+                printf("-");
+                break;
+            }
+        }
+    }
+}
+#endif
+
 void tm1637DisplayTwoNumbers(int left, int right)
 {
     unsigned char digitArr[4];
- 
-    if (left < 0)
-    {   
-        digitArr[0] = minus;
-        left *= -1;
-    } else 
-    {
-        digitArr[0] = none;
-    }
+    unsigned char arr[2];
 
+    _tm1637PrepareNumber(left, arr);
+    digitArr[0] = arr[0];
+    digitArr[1] = arr[1];
     
-    if (right < 0)
-    {   
-        digitArr[2] = minus;
-        right *= -1;
-    } else 
-    {
-        digitArr[2] = none;
-    }
+    _tm1637PrepareNumber(right, arr);
+    digitArr[2] = arr[0];
+    digitArr[3] = arr[1];
 
-    digitArr[1] = segmentMap[left % 10];
-    digitArr[3] = segmentMap[right % 10];
-    
+#ifdef POORTEST
+    printf("%d%d", left, right);
+    printf("%x%x%x%x", digitArr[0], digitArr[1], digitArr[2], digitArr[3]);
+    printAsNumber(digitArr);
+    printf("\n");
+#endif
+
     _tm1637DisplaySequence(digitArr);
+}
+
+void _tm1637PrepareNumber(int n, unsigned char *arr) 
+{
+    if (n < 0)
+    {
+        arr[0] = minus;
+        arr[1] = segmentMap[(n * -1) % 10];
+    } else {
+        if (n > 9) 
+        {
+            arr[0] = segmentMap[(n / 10) % 10];
+            arr[1] = segmentMap[n  % 10];
+        } else {
+            arr[0] = none;
+            arr[1] = segmentMap[n % 10];
+        }
+    }
 }
 
 void tm1637DisplayDecimal(int v, int displaySeparator)
@@ -82,7 +121,7 @@ void tm1637DisplayDecimal(int v, int displaySeparator)
 }
 
 // Valid brightness values: 0 - 8.
-// 0 = display off.
+// 0 = display off.void tm1637SetBrightness(char brightness)
 void tm1637SetBrightness(char brightness)
 {
     // Brightness command:
@@ -97,7 +136,7 @@ void tm1637SetBrightness(char brightness)
 }
 
 void _tm1637DisplaySequence(unsigned char digitArr[]) 
-{
+ {
     _tm1637Start();
     _tm1637WriteByte(0x40);
     _tm1637ReadResult();

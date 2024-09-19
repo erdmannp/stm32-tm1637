@@ -6,6 +6,7 @@ int main() {
   tm1637SetBrightness(5);
   tm1637DisplayTwoNumbers(-4, 6);
   tm1637DisplayTwoNumbers(4, -6);
+  tm1637DisplayTwoNumbers(24, -6);
 
   return 0;
 }

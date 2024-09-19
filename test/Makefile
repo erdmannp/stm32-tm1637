@@ -1,7 +1,8 @@
 TARGET = main
 LIBS = 
 CC = gcc
-CFLAGS = -g -Wall -I. -I$(CURDIR) -I$(CURDIR)/..
+POORTEST = 0
+CFLAGS = -g -Wall -I. -I$(CURDIR) -I$(CURDIR)/.. -DPOORTEST=$(POORTEST)
 
 .PHONY: default all clean
 
@@ -18,6 +19,9 @@ HEADERS = $(wildcard *.h)
 
 $(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS) -Wall $(LIBS) -o $@
+
+test:
+	$(TARGET)
 
 clean:
 	-rm -f *.o
