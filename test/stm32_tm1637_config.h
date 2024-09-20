@@ -3,6 +3,8 @@
 #include "stdio.h"
 #include "stdint.h"
 
+#include "stm33l1xx_hal.h"
+
 #define CLK_PORT "GPIOC"
 #define DIO_PORT "GPIOC"
 #define CLK_PIN "GPIO_PIN_0"

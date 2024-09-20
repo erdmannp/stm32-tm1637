@@ -1,4 +1,3 @@
-#include "stm33l1xx_hal.h"
 #include "stm32_tm1637.h"
 
 
