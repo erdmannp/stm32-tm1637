@@ -29,7 +29,11 @@ void tm1637Init(void)
     GPIO_InitTypeDef g = {0};
     g.Pull = GPIO_PULLUP;
     g.Mode = GPIO_MODE_OUTPUT_OD; // OD = open drain
+#ifdef GPIO_SPEED_FREQ_VERY_HIGH
     g.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+#else
+    g.Speed = GPIO_SPEED_FREQ_HIGH;
+#endif
     g.Pin = CLK_PIN;
     HAL_GPIO_Init(CLK_PORT, &g);
     g.Pin = DIO_PIN;
