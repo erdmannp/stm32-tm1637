@@ -16,5 +16,11 @@ jobs:
     - name: make
       run: cd test; make
 
-    - name: Run
-      run: cd test; ./main
+    - name: Run1
+      run: cd test; ./main | test 1 -eq $(grep -c "\-46406607d-4_6") 
+
+    - name: Run2
+      run: cd test; ./main | test 1 -eq $(grep -c "4-6066407d_4-6") 
+
+    - name: Run3
+      run: cd test; ./main | test 1 -eq $(grep -c "24-65b66407d24-6") 

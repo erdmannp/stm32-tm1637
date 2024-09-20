@@ -16,6 +16,8 @@
 #define GPIO_MODE_OUTPUT_OD "ODE_OUTPUT_OD"
 #define GPIO_SPEED_FREQ_VERY_HIGH "SPEED_FREQ_VERY_HIGH"
 
+#define POORTEST 1
+
  typedef struct
  {
    char* Pin;
