@@ -95,16 +95,16 @@ void _tm1637PrepareNumber(int n, unsigned char *arr)
 {
     if (n < 0)
     {
-        arr[0] = minus;
-        arr[1] = segmentMap[(n * -1) % 10];
+        arr[1] = minus;
+        arr[0] = segmentMap[(n * -1) % 10];
     } else {
         if (n > 9) 
         {
-            arr[0] = segmentMap[(n / 10) % 10];
-            arr[1] = segmentMap[n  % 10];
+            arr[1] = segmentMap[(n / 10) % 10];
+            arr[0] = segmentMap[n  % 10];
         } else {
-            arr[0] = none;
-            arr[1] = segmentMap[n % 10];
+            arr[1] = none;
+            arr[0] = segmentMap[n % 10];
         }
     }
 }
