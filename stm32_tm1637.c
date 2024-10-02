@@ -123,6 +123,21 @@ void tm1637DisplayDecimal(int v, int displaySeparator)
     _tm1637DisplaySequence(digitArr);
 }
 
+void tm1637DisplayHex(int v, int displaySeparator)
+{
+    unsigned char digitArr[4];
+    for (int i = 0; i < 4; ++i) {
+        digitArr[i] = segmentMap[v % 16];
+        if (i == 2 && displaySeparator) {
+            digitArr[i] |= 1 << 7;
+        }
+        v /= 16;
+    }
+    
+    _tm1637DisplaySequence(digitArr);    
+}
+
+
 // Valid brightness values: 0 - 8.
 // 0 = display off.void tm1637SetBrightness(char brightness)
 void tm1637SetBrightness(char brightness)
